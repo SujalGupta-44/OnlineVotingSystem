@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Voting System</title>
+  <link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">VS</div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#user">User</a>
+      <a href="{{ url_for('admin_login') }}">Admin</a>
+    </div>
+  </div>
+  <!-- Home Section -->
+  <section id="home" class="section">
+    <h1>Welcome <br>to <br> Online Voting System</h1>
+    <p>Secure • Easy • Reliable</p>
+  </section>
+<!-- User Login Section -->
+  <section id="user" class="login-section">
+    <div class="login-container">
+      <h2>User Login</h2>
+      <form action="{{ url_for('login') }}" method="POST" autocomplete="off" autocomplete="new-password">
+        <div class="input-group">
+          <label for="aadhar">Aadhar Number</label>
+          <input type="text" id="aadhar" name="aadhar" placeholder="Enter your 12-digit Aadhar number" autocomplete="off" maxlength="12" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="new-password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+      </form>
+      <div class="login-text">
+        <p>Don’t have an account? <a href="{{ url_for('register') }}">Register Here</a></p>
+      </div>
+    </div>
+  </section>
+ {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-message alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<script>
+    // jab page load ho ya message generate ho
+    setTimeout(function(){
+        const flash = document.querySelector('.flash-message');
+        if(flash){
+            flash.style.opacity = '0';   // fade out
+            // fade out ke baad completely remove karna
+            setTimeout(()=> flash.remove(), 500);
+        }
+    }, 3000); // 3000ms = 3 seconds
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../static/css/admin.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">VS</div>
+    <div class="nav-links">
+      <a href="{{ url_for('logout') }}">Log Out</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="form-box">
+      <h2>Admin Dashboard</h2>
+      <div class="button-group">
+        <a href="{{ url_for('add_election') }}" class="btn">Add Election</a><br><br><br>
+        <a href="{{ url_for('add_candidate') }}" class="btn">Add Candidate</a><br><br><br>
+        <a href="{{ url_for('view_result') }}" class="btn">View Result</a>
+      </div>
+    </div>
+  </div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-message alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<script>
+    // jab page load ho ya message generate ho
+    setTimeout(function(){
+        const flash = document.querySelector('.flash-message');
+        if(flash){
+            flash.style.opacity = '0';   // fade out
+            // fade out ke baad completely remove karna
+            setTimeout(()=> flash.remove(), 500);
+        }
+    }, 3000); // 3000ms = 3 seconds
+</script>
+</body>
+</html>

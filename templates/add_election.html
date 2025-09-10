@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Add Election</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/candidate.css') }}">
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">VS</div>
+    <div class="nav-links">
+      <a href="{{ url_for('view_result') }}">View Results</a>
+      <a href="{{ url_for('add_candidate') }}">Add Candidate</a>
+      <a href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </div>
+<section class="login-section">
+    <div class="login-container">
+      <h2>Add Election</h2>
+      <form method="POST">
+        <div class="input-group"> 
+          <label>Title:</label>
+          <input type="text" name="title" required>
+        </div>
+        <div class="input-group">
+          <label>Description:</label>
+          <textarea name="description"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Start Date:</label>
+          <input type="date" name="start_date" required>
+        </div>
+        <div class="input-group">
+          <label>End Date:</label>
+          <input type="date" name="end_date" required>
+        </div>
+        <div class="input-group">
+          <label>Status:</label>
+          <select name="status">
+              <option value="UPCOMING">UPCOMING</option>
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="CLOSED">CLOSED</option>
+          </select>
+        </div>
+        <br>
+        <button type="submit" class="btn">Add Election</button>
+      </form>
+
+      <h3 style="margin-top:20px">Existing Elections</h3>
+      <ul>
+        {% for e in elections %}
+          <li>
+            {{ e.election_id }} - {{ e.title }} ({{ e.status }})
+            <!-- Status change form -->
+            <form method="POST" action="{{ url_for('update_status', election_id=e.election_id) }}" style="display:inline;">
+              <select name="status">
+                <option value="UPCOMING" {% if e.status == 'UPCOMING' %}selected{% endif %}>UPCOMING</option>
+                <option value="ACTIVE" {% if e.status == 'ACTIVE' %}selected{% endif %}>ACTIVE</option>
+                <option value="CLOSED" {% if e.status == 'CLOSED' %}selected{% endif %}>CLOSED</option>
+              </select>
+              <button type="submit" class="update-btn">Update</button>
+            </form>
+            <!-- Delete election form -->
+            <form method="POST" action="{{ url_for('delete_election', election_id=e.election_id) }}" style="display:inline;">
+              <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this election?');">
+                Delete
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <li>No elections yet</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+<script>
+    setTimeout(function(){
+        const flash = document.querySelector('.flash-message');
+        if(flash){
+            flash.style.opacity = '0';
+            setTimeout(()=> flash.remove(), 500);
+        }
+    }, 3000);
+  </script>
+</body>
+</html>

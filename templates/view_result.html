@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>View Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/view_result.css') }}">
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">VS</div>
+    <div class="nav-links">
+      <a href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </div>
+
+  <section class="result-section">
+    <div class="result-container">
+      <h2>Election Results</h2>
+
+      <form method="GET" action="{{ url_for('view_result') }}">
+        <label>Select Election</label>
+        <select name="election_id" onchange="this.form.submit()">
+          <option value="">-- Choose --</option>
+          {% for e in elections %}
+            <option value="{{ e.election_id }}" {% if selected and selected.election_id == e.election_id %}selected{% endif %}>
+              {{ e.title }}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+      <!-- Reset Votes Button (only when election selected) -->
+      {% if selected %}
+        <form method="POST" action="{{ url_for('reset_votes', election_id=selected.election_id) }}">
+          <button type="submit" class="reset-btn" onclick="return confirm(' Are you sure? All votes will be deleted for this election!');">
+            Reset Votes
+          </button>
+        </form>
+      {% endif %}
+      {% if message %}
+        <div class="message-box">
+          <p>{{ message }}</p>
+        </div>
+      {% endif %}
+
+      {% if winner %}
+        <div class="winner-box">
+          <h3> Winner</h3>
+          <p><strong>{{ winner.name }}</strong> ({{ winner.party }}) — {{ winner.votes }} votes</p>
+        </div>
+      {% endif %}
+
+      <div class="rest-box">
+        <h3>Other Candidates</h3>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Candidate</th><th>Party</th><th>Votes</th></tr>
+          </thead>
+          <tbody>
+            {% if results %}
+              {% for r in results %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ r.name }}</td>
+                  <td>{{ r.party }}</td>
+                  <td>{{ r.votes }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="4">No candidates found.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

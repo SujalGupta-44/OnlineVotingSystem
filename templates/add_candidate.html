@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Add Candidate</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/candidate.css') }}">
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">VS</div>
+    <div class="nav-links">
+      <a href="{{ url_for('view_result') }}">View Results</a>
+      <a href="{{ url_for('add_election') }}">Add Election</a>
+      <a href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </div>
+<section class="login-section">
+    <div class="login-container">
+      <h2>Add Candidate</h2>
+      <form method="POST" action="{{ url_for('add_candidate') }}">
+        <div class="input-group">
+          <label>Candidate Name</label>
+          <input type="text" name="candidate_name" required>
+        </div>
+        <div class="input-group">
+          <label>Party Name</label>
+          <input type="text" name="party_name" required>
+        </div>
+        <div class="input-group">
+          <label>Election</label>
+          <select name="election" required>
+            <option value="">-- Select Election --</option>
+            {% for e in elections %}
+              <option value="{{ e.election_id }}">{{ e.title }} ({{ e.status }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button class="btn" type="submit">Add Candidate</button>
+      </form>
+    </div>
+  </section>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-message alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<script>
+    // jab page load ho ya message generate ho
+    setTimeout(function(){
+        const flash = document.querySelector('.flash-message');
+        if(flash){
+            flash.style.opacity = '0';   // fade out
+            // fade out ke baad completely remove karna
+            setTimeout(()=> flash.remove(), 500);
+        }
+    }, 3000); // 3000ms = 3 seconds
+</script>
+
+
+</body>
+</html>

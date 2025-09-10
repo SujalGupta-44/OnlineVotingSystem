@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="../static/css/user_dashboard.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-box">
+      <h2>Welcome, {{ session['user_name'] }}</h2>
+
+      <h3>Available Elections</h3>
+      <ul>
+        {% for election in elections %}
+          <li>
+            {{ election.title }} ({{ election.status }})
+            <a href="{{ url_for('vote', election_id=election.election_id) }}" class="btn">Cast Vote</a>
+          </li>
+        {% else %}
+          <li>No elections available</li>
+        {% endfor %}
+      </ul>
+
+      <div class="button-group">
+        <a href="{{ url_for('view_result_for_user', election_id=1) }}" class="btn">View Results</a>
+        <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+      </div>
+    </div>
+  </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-message alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<script>
+    // jab page load ho ya message generate ho
+    setTimeout(function(){
+        const flash = document.querySelector('.flash-message');
+        if(flash){
+            flash.style.opacity = '0';   // fade out
+            // fade out ke baad completely remove karna
+            setTimeout(()=> flash.remove(), 500);
+        }
+    }, 3000); // 3000ms = 3 seconds
+</script>
+
+</body>
+</html>
